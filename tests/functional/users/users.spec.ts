@@ -59,7 +59,28 @@ test.group('User', (group) => {
   })
   test('Retornar 422 quando não informar os dados obrigatórios', async ({ client, assert }) => {
     const response = await client.post('/users').json({})
-
+    assert.equal(response.body().code, 'BAD_REQUEST')
+    assert.equal(response.body().status, 422)
+  })
+  test('Retorna 422 quando informam o email inválido', async ({ client, assert }) => {
+    const response = await client.post('/users').json({
+      username: 'test',
+      email: 'test@',
+      password: 'password',
+      avatar: 'https://avatar.com/avatar/avatar',
+    })
+    response.assertStatus(422)
+    assert.equal(response.body().code, 'BAD_REQUEST')
+    assert.equal(response.body().status, 422)
+  })
+  test('Retorna 422 quando informam a senha for inválida', async ({ client, assert }) => {
+    const response = await client.post('/users').json({
+      username: 'test',
+      email: 'test@',
+      password: '123',
+      avatar: 'https://avatar.com/avatar/avatar',
+    })
+    response.assertStatus(422)
     assert.equal(response.body().code, 'BAD_REQUEST')
     assert.equal(response.body().status, 422)
   })
