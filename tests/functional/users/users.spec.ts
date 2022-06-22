@@ -57,4 +57,10 @@ test.group('User', (group) => {
     assert.equal(response.body().code, 'BAD_REQUEST')
     assert.equal(response.body().status, 409)
   })
+  test('Retornar 422 quando não informar os dados obrigatórios', async ({ client, assert }) => {
+    const response = await client.post('/users').json({})
+
+    assert.equal(response.body().code, 'BAD_REQUEST')
+    assert.equal(response.body().status, 422)
+  })
 })
