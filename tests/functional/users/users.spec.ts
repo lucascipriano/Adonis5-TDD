@@ -31,7 +31,6 @@ test.group('User', (group) => {
       password: 'password',
       avatar: 'https://avatar.com/avatar/avatar',
     })
-    console.log(response.response)
     response.assertStatus(409)
 
     assert.exists(response.body().message)
@@ -49,7 +48,6 @@ test.group('User', (group) => {
       password: 'password',
       avatar: 'https://avatar.com/avatar/avatar',
     })
-    console.log(response.response)
     response.assertStatus(409)
 
     assert.exists(response.body().message)
