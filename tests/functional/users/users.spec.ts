@@ -1,6 +1,7 @@
 import Database from '@ioc:Adonis/Lucid/Database'
 import { test } from '@japa/runner'
 import { UserFactory } from 'Database/factories'
+import Hash from '@ioc:Adonis/Core/Hash'
 
 test.group('User', (group) => {
   // Iniciar migration e no final deletar, para não dar ruim
@@ -99,5 +100,21 @@ test.group('User', (group) => {
     assert.exists(response.body().user.email, email)
     assert.exists(response.body().user.avatar, avatar)
     assert.exists(response.body().user.id, id.toString())
+  })
+
+  test('Atualizar senha', async ({ client, assert }) => {
+    const user = await UserFactory.create()
+    const password = 'test'
+
+    const response = await client.put(`/users/${user.id}`).json({
+      email: user.email,
+      avatar: user.avatar,
+      password,
+    })
+    response.assertStatus(200)
+    assert.exists(response.body().user, 'Password undefined')
+    assert.exists(response.body().user.id, user.id.toString())
+    await user.refresh()
+    assert.isTrue(await Hash.verify(user.password, password))
   })
 })
