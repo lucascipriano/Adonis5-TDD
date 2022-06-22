@@ -84,4 +84,20 @@ test.group('User', (group) => {
     assert.equal(response.body().code, 'BAD_REQUEST')
     assert.equal(response.body().status, 422)
   })
+
+  test('Atualizar usuário', async ({ client, assert }) => {
+    const { id, password } = await UserFactory.create()
+    const email = 'test@test.com'
+    const avatar = 'https://avatars.githubusercontent.com/u/38764283?v=4'
+    const response = await client.put(`/users/${id}`).json({
+      email,
+      avatar,
+      password,
+    })
+    response.assertStatus(200)
+    assert.exists(response.body().user, 'User undefined')
+    assert.exists(response.body().user.email, email)
+    assert.exists(response.body().user.avatar, avatar)
+    assert.exists(response.body().user.id, id.toString())
+  })
 })
