@@ -55,7 +55,7 @@ test.group('User', (group) => {
     assert.exists(response.body().message)
     assert.exists(response.body().code)
     assert.exists(response.body().status)
-    assert.exists(response.body().message, 'email')
+    assert.exists(response.body().message, 'username')
     assert.equal(response.body().code, 'BAD_REQUEST')
     assert.equal(response.body().status, 409)
   })
