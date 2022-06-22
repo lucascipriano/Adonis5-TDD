@@ -11,7 +11,7 @@ test.group('User', (group) => {
     const userPayload = {
       email: 'test@test.com',
       username: 'test',
-      password: 'test',
+      password: 'test22',
       avatar: 'http://avatar.com/avatar/avatar.png',
     }
     const response = await client.post('/users').json(userPayload)
@@ -20,6 +20,6 @@ test.group('User', (group) => {
     response.assertBodyContains({ user: expected })
 
     response.assertStatus(201)
-    assert.exists(response.body().user.password, 'existe')
+    assert.notExists(response.body().user.password, 'Passowrd Defined')
   })
 })
