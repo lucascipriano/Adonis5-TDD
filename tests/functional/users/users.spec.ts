@@ -41,4 +41,22 @@ test.group('User', (group) => {
     assert.equal(response.body().code, 'BAD_REQUEST')
     assert.equal(response.body().status, 409)
   })
+  test('Erro 409 caso usuário esteja em uso', async ({ client, assert }) => {
+    const { username } = await UserFactory.create()
+    const response = await client.post('/users').json({
+      username,
+      email: 'test@test.com',
+      password: 'password',
+      avatar: 'https://avatar.com/avatar/avatar',
+    })
+    console.log(response.response)
+    response.assertStatus(409)
+
+    assert.exists(response.body().message)
+    assert.exists(response.body().code)
+    assert.exists(response.body().status)
+    assert.exists(response.body().message, 'email')
+    assert.equal(response.body().code, 'BAD_REQUEST')
+    assert.equal(response.body().status, 409)
+  })
 })
