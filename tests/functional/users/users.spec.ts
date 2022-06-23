@@ -117,4 +117,48 @@ test.group('User', (group) => {
     await user.refresh()
     assert.isTrue(await Hash.verify(user.password, password))
   })
+  test('Retorna 422 quando os dados são inválidos no update', async ({ client, assert }) => {
+    const { id } = await UserFactory.create()
+    const response = await client.put(`/users/${id}`).json({})
+    response.assertStatus(422)
+    assert.equal(response.body().code, 'BAD_REQUEST')
+    assert.equal(response.body().status, 422)
+  })
+
+  test('Retornar 422 quando email é inválido', async ({ client, assert }) => {
+    const { id, password, avatar } = await UserFactory.create()
+
+    const response = await client.put(`/users/${id}`).json({
+      email: 'test@',
+      password,
+      avatar,
+    })
+    response.assertStatus(422)
+    assert.equal(response.body().code, 'BAD_REQUEST')
+    assert.equal(response.body().status, 422)
+  })
+  test('Retornar 422 quando senha é inválido', async ({ client, assert }) => {
+    const { id, avatar, email } = await UserFactory.create()
+
+    const response = await client.put(`/users/${id}`).json({
+      email,
+      password: '123',
+      avatar,
+    })
+    response.assertStatus(422)
+    assert.equal(response.body().code, 'BAD_REQUEST')
+    assert.equal(response.body().status, 422)
+  })
+  test('Retornar 422 quando avatar é inválido', async ({ client, assert }) => {
+    const { id, password, email } = await UserFactory.create()
+
+    const response = await client.put(`/users/${id}`).json({
+      email,
+      password,
+      avatar: 'teste',
+    })
+    response.assertStatus(422)
+    assert.equal(response.body().code, 'BAD_REQUEST')
+    assert.equal(response.body().status, 422)
+  })
 })
